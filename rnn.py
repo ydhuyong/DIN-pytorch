@@ -14,7 +14,7 @@ class AUGRUCell(nn.Module):
     def forward(self, X, h_prev, attention_score):
         temp_input = torch.cat( [ h_prev, X ] , dim = -1)
         r = self.reset_gate( temp_input)
-        u = self.reset_gate( temp_input)
+        u = self.update_gate( temp_input)
 
         h_hat = self.h_hat_gate( torch.cat( [ h_prev * r, X], dim = -1) )
 
