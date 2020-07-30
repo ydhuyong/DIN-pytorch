@@ -16,7 +16,7 @@ class MLP( nn.Module):
             return nn.Sequential(
                 nn.Linear( in_dim, out_dim, bias = bias),
                 nn.BatchNorm1d( out_dim),
-                Activation( 0.01 ))
+                Activation( 0.1 ))
 
         dimension_pair = [input_dimension] + hidden_size
         layers = [ _dense( dimension_pair[i], dimension_pair[i+1]) for i in range( len( hidden_size))]

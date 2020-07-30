@@ -11,13 +11,13 @@ class DIN( nn.Module):
 
         self.embedding_layer = InputEmbedding( n_uid, n_mid, n_cid, embedding_dim )
         self.attention_layer = AttentionLayer( embedding_dim, hidden_size = [ 80, 40], activation_layer='sigmoid')
-        self.output_layer = MLP( embedding_dim * 9, [ 200, 80], 1, 'ReLU')
         # self.output_layer = MLP( embedding_dim * 9, [ 200, 80], 1, 'ReLU')
+        self.output_layer = MLP( embedding_dim * 7, [ 200, 80], 1, 'ReLU')
 
     def forward( self, data, neg_sample = False):
                             
-        user, material_historical, category_historical, mask, sequential_length , material, category, target = data
-        material_historical_neg = category_historical_neg = None
+        user, material_historical, category_historical, mask, sequential_length , material, category, \
+            material_historical_neg, category_historical_neg = data
         
         user_embedding, material_historical_embedding, category_historical_embedding, \
             material_embedding, category_embedding, material_historical_neg_embedding, category_historical_neg_embedding = \
@@ -32,7 +32,9 @@ class DIN( nn.Module):
         attention_feature = self.attention_layer( item_embedding, item_historical_embedding, mask)
 
         # combination = torch.cat( [ user_embedding, item_embedding, item_historical_embedding_sum, attention_feature ], dim = 1)
-        combination = torch.cat( [ user_embedding, item_embedding, item_historical_embedding_sum, item_embedding * item_historical_embedding_sum, attention_feature ], dim = 1)
+        combination = torch.cat( [ user_embedding, item_embedding, item_historical_embedding_sum, 
+                                    # item_embedding * item_historical_embedding_sum, 
+                                    attention_feature ], dim = 1)
 
         scores = self.output_layer( combination)
 
@@ -52,8 +54,8 @@ class DIEN( nn.Module):
 
     def forward( self, data, neg_sample = False):
                             
-        user, material_historical, category_historical, mask, sequential_length , material, category, target = data
-        material_historical_neg = category_historical_neg = None
+        user, material_historical, category_historical, mask, sequential_length , material, category, \
+            material_historical_neg, category_historical_neg = data
         
         user_embedding, material_historical_embedding, category_historical_embedding, \
             material_embedding, category_embedding, material_historical_neg_embedding, category_historical_neg_embedding = \

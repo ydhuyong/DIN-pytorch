@@ -75,4 +75,4 @@ class MyDataSet( torch.utils.data.Dataset):
         target = self.target[ index]
 
         return user, material_historical, category_historical, mask, sequential_length , \
-            material, category, target
+            material, category, 0, 0, target
